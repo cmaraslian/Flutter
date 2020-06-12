@@ -14,7 +14,7 @@ class Chart extends StatelessWidget {
         Duration(days: index),
       );
 
-      double totalSum = 0;
+      double totalSum = 0.0;
 
       for (var i = 0; i < recentTransactions.length; i++) {
         bool sameDay = recentTransactions[i].date.day == weekDay.day;
@@ -27,28 +27,37 @@ class Chart extends StatelessWidget {
       }
 
      
-
       return {
         'day': DateFormat.E().format(weekDay)[0],
         'value': totalSum,
       };
-    });
+    }).reversed.toList();
+  }
+
+  double get _weekTotalValue {
+    return groupedTransactions.fold(0.00, (sum, tr) => sum + tr['value']);
   }
 
   @override
   Widget build(BuildContext context) {
-    groupedTransactions;
     return Card(
       elevation: 6,
       margin: EdgeInsets.all(20),
-      child: Row(
-        children: groupedTransactions.map((tr) {
-            return ChartBar(
-              label: tr['label'],
-              value: tr['value'],
-              percentage: 0,
+      child: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: groupedTransactions.map((tr) {
+            return Flexible(
+              fit: FlexFit.tight,
+              child: ChartBar(
+                label: tr['day'],
+                value: tr['value'],
+                percentage: _weekTotalValue == 0 ? 0 : (tr['value'] as double) / _weekTotalValue,
+              ),
             );
-        }).toList(),
+          }).toList(),
+        ),
       ),
     );
   }
