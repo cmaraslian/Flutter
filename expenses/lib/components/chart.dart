@@ -25,8 +25,6 @@ class Chart extends StatelessWidget {
           totalSum += recentTransactions[i].value;
         }
       }
-
-     //dfdffdfd
       return {
         'day': DateFormat.E().format(weekDay)[0],
         'value': totalSum,
